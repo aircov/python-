@@ -1121,5 +1121,104 @@ for line in out.splitlines():
         kill(pid)
 ---------------------------------------------------------------------------------------------------------------------------
 
+# -*-coding:utf-8 -*-
+# @author  : 草上飞
+07-文本相似度.py
 
+import pkuseg
+
+from gensim import corpora,models, similarities
+
+
+doc0 = "我不喜欢上海"
+doc1 = "上海是一个好地方"
+doc2 = "北京是一个好地方"
+doc3 = "上海好吃的在哪里"
+doc4 = "上海好玩的在哪里"
+doc5 = "上海是好地方"
+doc6 = "上海路和上海人"
+doc7 = "喜欢小吃"
+doc_test="我喜欢上海的小吃"
+
+all_doc = []
+all_doc.append(doc0)
+all_doc.append(doc1)
+all_doc.append(doc2)
+all_doc.append(doc3)
+all_doc.append(doc4)
+all_doc.append(doc5)
+all_doc.append(doc6)
+all_doc.append(doc7)
+
+seg = pkuseg.pkuseg()  # 加载默认模型
+
+all_doc_list = []
+
+for doc in all_doc:
+    doc_list = [word for word in seg.cut(doc)]
+    all_doc_list.append(doc_list)
+
+print("all_doc_list:", all_doc_list)
+
+# 测试文档
+doc_test_list = [word for word in seg.cut(doc_test)]
+print(doc_test_list)
+
+"""
+# 可以加载停用词stop words
+# 进行分词
+text = seg.cut(content)
+
+
+#停用词
+stopwords = []
+with open('stopwords.txt',encoding='utf-8') as f:
+    stopwords = f.read()
+
+new_text = []
+for w in text:
+    if w not in stopwords:
+        new_text.append(w)
+        print(new_text)
+"""
+
+
+# 制作语料库
+# 使用dictionary方法获取词袋
+dictionary = corpora.Dictionary(all_doc_list)
+
+# 词袋数字编号
+print(dictionary.keys())
+
+# 编号与词之间的对应关系
+print(dictionary.token2id)
+print("="*50)
+
+# 使用doc2bow制作语料库
+corpus = [dictionary.doc2bow(doc) for doc in all_doc_list]
+
+# 语料库是一组向量，向量中的元素是一个二元组（编号、频次数），对应分词后的文档中的每一个词
+print("corpus:",corpus)
+
+# 把测试文档也转换为二元组的向量
+doc_test_vec = dictionary.doc2bow(doc_test_list)
+print("doc_test_vec:",doc_test_vec)
+
+# 相似度分析
+# 使用TF-IDF模型对语料库建模
+tfidf = models.TfidfModel(corpus)
+print(tfidf)
+
+print(tfidf[doc_test_vec])  # 测试文档中每个词的tf-idf值
+
+# 分析测试文档的相似度
+index = similarities.SparseMatrixSimilarity(tfidf[corpus],num_features=len(dictionary.keys()))
+
+sim = index[tfidf[doc_test_vec]]
+
+print('sim:',sim)
+# 根据相似度排序
+ret = sorted(enumerate(sim), key=lambda item:-item[1])
+print('ret:',ret)
+# 测试文档与doc7相似度最高，其次是doc0，与doc2的相似度为零
 
