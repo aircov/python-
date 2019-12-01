@@ -53,16 +53,6 @@ class MoneyAward(object):
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         old_time = (datetime.datetime.now()+datetime.timedelta(minutes=-(60*240))).strftime("%Y-%m-%d %H:%M:%S")
 
-        # sql = """select
-        #  ORDER_NO,DRAW_RESULT,MIX_TYPE,MULTIPLE,ISSUE_NO,LOTTERY_TYPE,LOTTERY_SUB_TYPE
-        # from LTDR_PRINT_TICKET
-        # where  ((gmt_create>=to_date('%s', 'yyyy-mm-dd HH24:mi:ss')
-        #    and gmt_create<to_date('%s', 'yyyy-mm-dd HH24:mi:ss'))
-        #     or (gmt_modified >= to_date('%s', 'yyyy-mm-dd HH24:mi:ss')
-        #    and gmt_modified < to_date('%s', 'yyyy-mm-dd HH24:mi:ss')))
-        #   and DRAW_STATUS = 'DRAW_FINISH'
-        #   and MIX_TYPE is not null and DRAW_RESULT is not null""" % (old_time, current_time, old_time, current_time)
-
         sql = """select
        ORDER_NO,DRAW_RESULT,MIX_TYPE,MULTIPLE,ISSUE_NO,LOTTERY_TYPE,LOTTERY_SUB_TYPE
       from  LTDR_PRINT_TICKET
@@ -342,9 +332,11 @@ class MoneyAward(object):
                     up_data.append((item['MULTIPLE'], item['GMT_CREATE'], item['GMT_MODIFIED'], item['ORDER_NO'],
                                     item['DRAW_RESULT'], item['GAME_NO'], item['MULTIPLE'], item['LOTTERY_SUB_TYPE']))
 
-            sql = """INSERT INTO PRIZE_TICKET_SPLIT (id, ORDER_NO, DRAW_RESULT, MIX_TYPE, MULTIPLE, GMT_CREATE, MATCH_COUNT, UNIQUE_ID, GAME_RESULT_SP, UNIQUE_STATUS, GAME_NO,ISSUE_NO,LOTTERY_TYPE,LOTTERY_SUB_TYPE,GMT_MODIFIED) VALUES (SEQ_PRIZE_TICKET_SPLIT.nextval, :v2, :v3, :v4, :v5,to_date(:v6,'yyyy-mm-dd hh24:mi:ss') ,:v7, :v8, :v9, :v10, :v11, :v12,:v13,:v14,to_date(:v15,'yyyy-mm-dd hh24:mi:ss'))"""
+            sql = """INSERT INTO PRIZE_TICKET_SPLIT (id, ORDER_NO, DRAW_RESULT, MIX_TYPE, MULTIPLE, GMT_CREATE, MATCH_COUNT, UNIQUE_ID, GAME_RESULT_SP, UNIQUE_STATUS, GAME_NO,ISSUE_NO,LOTTERY_TYPE,LOTTERY_SUB_TYPE,GMT_MODIFIED) 
+	    VALUES (SEQ_PRIZE_TICKET_SPLIT.nextval, :v2, :v3, :v4, :v5,to_date(:v6,'yyyy-mm-dd hh24:mi:ss') ,:v7, :v8, :v9, :v10, :v11, :v12,:v13,:v14,to_date(:v15,'yyyy-mm-dd hh24:mi:ss'))"""
 
-            up_sql = """update PRIZE_TICKET_SPLIT set MULTIPLE=:v1,GMT_CREATE=to_date(:v2,'yyyy-mm-dd hh24:mi:ss'), GMT_MODIFIED=to_date(:v3,'yyyy-mm-dd hh24:mi:ss') where ORDER_NO=:v4 and DRAW_RESULT=:v5 and GAME_NO = :v6 and MULTIPLE < :v7 and LOTTERY_SUB_TYPE=:v8"""
+            up_sql = """update PRIZE_TICKET_SPLIT set MULTIPLE=:v1,GMT_CREATE=to_date(:v2,'yyyy-mm-dd hh24:mi:ss'), GMT_MODIFIED=to_date(:v3,'yyyy-mm-dd hh24:mi:ss') where 
+	    ORDER_NO=:v4 and DRAW_RESULT=:v5 and GAME_NO = :v6 and MULTIPLE < :v7 and LOTTERY_SUB_TYPE=:v8"""
 
             if len(up_data)>0:
                 print('开始更新数据')
@@ -1221,4 +1213,347 @@ print('sim:',sim)
 ret = sorted(enumerate(sim), key=lambda item:-item[1])
 print('ret:',ret)
 # 测试文档与doc7相似度最高，其次是doc0，与doc2的相似度为零
+
+
+------------------------------------------------------------------------------------------------------------
+{
+html，
+css，
+js
+}
+
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>JS百度搜索框联想词提示代码</title>
+
+<link rel="stylesheet" type="text/css" href="css/my.css" />
+
+</head>
+<body>
+
+<div id="out">
+	<div id="ser_box">
+		<input type="search" id="ipt" /><span><input id="su" value="搜索" class="bg s_btn" type="submit"></span>
+	</div>
+
+	<div id="bot_box">
+		<ul id="oul"></ul>
+	</div>
+</div>
+
+<script src="js/my.js" type="text/javascript" charset="utf-8"></script>
+
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+<p>适用浏览器：360、FireFox、Chrome、Safari、Opera、傲游、搜狗、世界之窗. 不支持IE8及以下浏览器。</p>
+<p>来源：<a href="http://sc.chinaz.com/" target="_blank">站长素材</a></p>
+</div>
+</body>
+</html>
+
+my.css
+
+*{
+	margin: 0;
+	padding: 0;
+}
+#out{
+	width:500px;
+	height:140px;
+	margin: 160px 350px;
+}
+#ser_box{
+	width:500px;
+	height:32px;
+	border: 1px solid red;
+	text-align: center;
+}
+#ipt{
+	width:480px;
+	height: 26px;
+	margin-top: 2px;
+	border: 0;
+	outline: 0;
+	font-family: "微软雅黑";
+	font-size: 16px;
+}
+
+#bot_box{
+	width:500px;
+	border: 1px solid #4C9ED9;
+	border-top: none;
+	display: none;
+	}
+	
+#bot_box ul li{
+		list-style: none;
+		line-height: 25px;
+		padding-left: 10px;
+		}
+#bot_box ul li:hover{
+		background: #BCBCBC;
+		}		
+.s_btn {
+	position:relative;
+	left:300px;
+	top:-31px;
+    width: 100px;
+    height: 36px;
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 1px;
+    background: red;
+    border-bottom: 1px solid #2d78f4;
+    outline: medium;
+}
+  
+.sel{
+	background:#BCBCBC;
+}
+
+
+my.js
+function $(id) {
+	return document.getElementById(id);
+}
+
+var ipt = $("ipt");
+var ser = $("ser_box");
+var bot = $("bot_box");
+var oul = $("oul");
+
+
+ipt.oninput = function() {
+	var ss = ipt.value;
+	// var url = "http://suggestion.baidu.com/su?cb=queryList&wd=" + ss;
+	var url = "http://192.168.191.1:8000/api/search/person/su?cb=queryList&wd=" + ss;
+	addScript(url);
+}
+
+ipt.onfocus = function() {
+	var ss = ipt.value;
+	// var url = "http://suggestion.baidu.com/su?cb=queryList&wd=" + ss;
+	var url = "http://192.168.191.1:8000/api/search/person/su?cb=queryList&wd=" + ss;
+	addScript(url);
+
+}
+
+function queryList(data) {
+	ss=document.getElementsByTagName("script")[0];
+	document.body.removeChild(ss)
+	
+	var arr = data.s;
+	oul.innerHTML = "";
+	if(arr.length == 0) {
+		bot.style.display = "none";
+	} else {
+		bot.style.display = "block";
+	}
+
+	for(var i = 0; i < arr.length; i++) {
+		li = document.createElement("li");
+		li.innerHTML = arr[i];
+		li.onclick = function() {
+			oul.innerHTML = "";
+			ipt.value = this.innerHTML;
+			bot.style.display = "none";
+		}
+		oul.appendChild(li);
+	}
+}
+
+function addScript(url) {
+	var s = document.createElement("script");
+	s.src = url;
+	s.type = "text/javascript";
+	document.body.appendChild(s);
+}
+
+/*取li*/
+
+lis = document.getElementsByTagName("li");
+
+/*按键*/
+var i = 0;
+
+document.onkeydown = function(ev) {
+
+	if(bot.style.display == "block") {
+		
+
+		if(ev.keyCode == 40) {
+			for(var j = 0; j < lis.length; j++) {
+				if(lis[j].className == "sel") {
+					lis[j].className = "";
+				}
+			}
+
+			if(i < lis.length) {
+				lis[i].className = "sel";
+				i++;
+				if(i == lis.length) {
+					i = 0;
+				}
+			}
+		}
+
+		if(ev.keyCode == 38) {
+			m = 0
+			for(; m < lis.length; m++) {
+				if(lis[m].className == "sel") {
+					lis[m].className = "";
+					break;
+				}
+			}
+			i = m;
+			if(m > 0) {
+				lis[m - 1].className = "sel";
+			} else {
+				lis[lis.length - 1].className = "sel";
+			}
+		}
+
+		
+		
+		
+		if(ev.keyCode == 13) {
+			for(var n = 0; n < lis.length; n++) {
+				if(lis[n].className == "sel") {
+					ipt.value = lis[n].innerHTML;
+				}
+			}
+			bot.style.display = "none";
+		}
+	} else {
+		i = 0;
+		m = 0;
+	}
+}
+
+
+flask_api
+@search_person_blu.route('/su/')
+def index():
+    """
+    搜索提示功能
+    根据输入的值自动联想,支持中文,英文,英文首字母
+    :return: response
+    """
+    global num
+    num += 1
+    if num % 100 == 0:
+        reload(search_script_conf)
+        print(search_script_conf.sug)
+
+    wd = request.args.get('wd')
+
+    if not wd:
+        return make_response("""queryList({"q":"","p":false,"bs":"","csor":"0","status":770,"s":[]});""")
+
+    # 搜索词(支持中文，英文，英文首字母)
+    s = wd
+
+    result = search_script_conf.get_tips_word(search_script_conf.sug, search_script_conf.data, s)[:10]
+
+    response = make_response(
+        """queryList({'q':'""" + wd + """','p':false,'s':""" + str(result) + """});""")
+
+    response.headers['Content-Type'] = 'text/javascript; charset=utf-8'
+
+    # 记录日志
+    ret = dict()
+    ret['code'] = 200
+    ret['msg'] = "ok"
+    ret['search_word'] = wd
+    ret['search_result'] = result
+    ret['search_type'] = 'search_tips'
+    ret['gmt_created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+    ret['user_id'] = ''
+    ret['platformCode'] = ''
+    info(json.dumps(ret, ensure_ascii=False))
+    return response
+
+-------------------------------------------------------------------------------------------------
+import pymysql
+
+db = pymysql.connect(host='127.0.0.1', user='root', password='mysql123', port=3306)
+cursor = db.cursor()
+cursor.execute("CREATE DATABASE maoyan DEFAULT CHARACTER SET utf8mb4")
+db.close()
+
+db = pymysql.connect(host='127.0.0.1', user='root', password='mysql123', port=3306, db='maoyan')
+cursor = db.cursor()
+sql = 'CREATE TABLE IF NOT EXISTS films (name VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, country VARCHAR(255) NOT NULL, 
+length VARCHAR(255) NOT NULL, released VARCHAR(255) NOT NULL, score VARCHAR(255) NOT NULL, people INT NOT NULL, 
+box_office BIGINT NOT NULL, PRIMARY KEY (name))'
+cursor.execute(sql)
+db.close()
+
+def to_mysql(data):
+    """
+    信息写入mysql
+    """
+    table = 'films'
+    keys = ', '.join(data.keys())
+    values = ', '.join(['%s'] * len(data))
+    db = pymysql.connect(host='localhost', user='root', password='774110919', port=3306, db='maoyan')
+    cursor = db.cursor()
+    sql = 'INSERT INTO {table}({keys}) VALUES ({values})'.format(table=table, keys=keys, values=values)
+    try:
+        if cursor.execute(sql, tuple(data.values())):
+            print("Successful")
+            db.commit()
+    except:
+        print('Failed')
+        db.rollback()
+    db.close()
+
+-------------------------------------------------------------------------------------------------
+gunicorn_config.py
+"""
+不用，需要的话再放到manage目录下使用
+"""
+# 为了更好的管理gunicorn，在项目目录下创建gunicorn_conf.py文件，内容如下
+import os
+import multiprocessing
+
+# 获取当前该配置文件的绝对路径。gunicorn的配置文件是python文件,所以可以直接写python代码
+
+path_of_current_file = os.path.abspath(__file__)
+
+path_of_current_dir = os.path.split(path_of_current_file)[0]
+
+chdir = path_of_current_dir
+
+#workers = multiprocessing.cpu_count() * 2 + 1  # 可以理解为进程数，会自动分配到你机器上的多CPU，完成简单并行化
+
+workers = 2  # 进程数量
+
+worker_class = 'sync'  # 默认的worker的类型，如何选择见：[http://docs](http://docs).[gunicorn.org/en/stable/design.html#choosing-a-worker-type](http://gunicorn.org/en/stable/design.html#choosing-a-worker-type)
+
+bind = '0.0.0.0:8000'  # 服务使用的端口
+
+pidfile = '%s/gunicorn.pid' % path_of_current_dir  # 存放Gunicorn进程pid的位置，便于跟踪
+
+accesslog = '%s/logs/00_gunicorn_access.log' % path_of_current_dir  # 存放访问日志的位置，注意首先需要存在logs文件夹，Gunicorn才可自动创建log文件
+
+errorlog = '%s/logs/00_gunicorn_access.log' % path_of_current_dir  # 存放错误日志的位置，可与访问日志相同
+
+reload = True  # 如果应用的代码有变动，work将会自动重启，适用于开发阶段
+
+daemon = True # 是否后台运行
+
+debug = False
+
+timeout = 5   # server端的请求超时秒数
+
+loglevel = 'error'
+
+# 开启服务  gunicorn -b 10.4.212.3:8000 manage:app -c ./gunicorn_conf.py
+# 查看进程  ps -aux | grep gunicorn / gunicorn.pid
+# kill -9 pid
+
+
 
